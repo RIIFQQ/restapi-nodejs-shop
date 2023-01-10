@@ -8,53 +8,93 @@ const jwt = require('jsonwebtoken');
 const verify = require('../middleware/verify');
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
-  res.send('respond with a resource');
+router.get('/', async function (req, res, next) {
+  try {
+    const id = req.params.id;
+    let users = await Users.findAll();
+    if(!users){
+        return res.status(404).json({
+            status:404,
+            message: "Users Not Found"
+        });
+    }
+
+    return res.json({
+        status: 200,
+        message: "Success Get All User",
+        data: users
+    });
+  } catch(e) {
+    return res.status(500).json({
+      status:500,
+      message: e.message
+    });
+  }  
 });
 
-router.get('/:id', verify, async function(req, res){
-  const id = req.params.id;
-  let users = await Users.findByPk(id);
-  if(!users){
-      return res.status(404).json({
-          status:404,
-          message: "Users Not Found"
-      });
-  }
+//router.get('/:id', verify, async function(req, res){
+router.get('/:id',  async function(req, res){
+  try {
+    const id = req.params.id;
+    let users = await Users.findByPk(id);
+    if(!users){
+        return res.status(404).json({
+            status:404,
+            message: "Users Not Found"
+        });
+    }
 
-  return res.json({
-      status: 200,
-      message: "Success Show Users",
-      data: users
-  });
+    return res.json({
+        status: 200,
+        message: "Success Detail Users",
+        data: users
+    });
+  } catch(e) {
+    return res.status(500).json({
+      status:500,
+      message: e.message
+    });
+  }  
 });
 
-router.put('/edit/:id', verify, async function(req, res){
-  const id = req.params.id;
-  let users = await Users.findByPk(id);
-  if(!products){
-      return res.status(404).json({
-          status:404,
-          message: "Users Not Found"
-      });
-  }
+router.put('/edit/:id',  async function(req, res){
+  //router.put('/edit/:id', verify, async function(req, res){
+  try {
+    const id = req.params.id;
+    let users = await Users.findByPk(id);
+    if(!users){
+        return res.status(404).json({
+            status:404,
+            message: "Users Not Found"
+        });
+    }
 
-  const schema = {
-      name: "string",
-      email: "string"
-  }
-  const validate = v.validate(req.body, schema);
-  if(validate.length){
-      return res.status(422).json(validate);
-  }
+    /*
+      const schema = {
+          name: "string",
+          email: "string"
+      }
+    */
+    /*   
+      const validate = v.validate(req.body, schema);
+      if(validate.length){
+          return res.status(422).json(validate);
+      }
+    */
+    
+    users_update = await Users.update({ name: req.body.name, email: req.body.email }, {where: { id: req.params.id }}); 
 
-  users = await Users.update(req.body);
-
-  return res.json({
-      status: 200,
-      message: "Success Update Users",
-      data: Users
-  });
+    return res.json({
+        status: 200,
+        message: "Success Update Users",
+        data: req.body 
+    });
+  }  catch(e) {
+    return res.status(500).json({
+      status:500,
+      message: e.message
+    }); 
+  }  
 });
 
 router.post('/register', async (req, res) => {
