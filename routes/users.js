@@ -154,13 +154,9 @@ router.post('/login', async (req, res) => {
   try {
 
     const data = await Users.findOne({
-
       where: {
-
         email: req.body.email
-
       },
-
     });
 
     if (!data) return res.status(401).json({ status: 401, message: "Email Tidak Ditemukan" });
@@ -184,16 +180,14 @@ router.post('/login', async (req, res) => {
 
     });
 
+    users_update = await Users.update({ refresh_token: accessToken  }, {where: { id: data.id }}); 
+
     return res.json({
-
       status: 200,
-
-      message: "Login Berhasil",
-
+      message: "Login Berhasil", 
       data: data,
-
+      user_id: data.id,      
       token: accessToken
-
     });
   } catch (error) {
     return res.status(404).json({

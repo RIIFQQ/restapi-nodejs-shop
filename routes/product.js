@@ -5,8 +5,9 @@ const validator = require("fastest-validator");
 const v = new validator();
 const verify = require('../middleware/verify');
 
-router.get("/", verify, async function(req,res,next){
-    // res.send("Belajar Node Js");
+//router.get("/", verify, async function(req,res,next){
+router.get("/",  async function(req,res,next){
+// res.send("Belajar Node Js");
     let products = await Products.findAll();
     return res.json({
         status: 200,
@@ -15,7 +16,8 @@ router.get("/", verify, async function(req,res,next){
     })
 });
 
-router.get('/:id', verify, async function(req, res){
+//router.get('/:id', verify, async function(req, res){
+router.get('/:id',  async function(req, res){
     const id = req.params.id;
     let products = await Products.findByPk(id);
     if(!products){
