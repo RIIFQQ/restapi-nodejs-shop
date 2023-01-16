@@ -7,8 +7,9 @@ var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var productsRouter = require('./routes/product');
 var cartRouter = require('./routes/cart');
+var productsRouter = require('./routes/product');
+
 
 var app = express();
 TZ = 'Asia/Jakarta'
